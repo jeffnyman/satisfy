@@ -54,6 +54,15 @@ Style/AccessorMethodName:
 Style/PredicateName:
   Enabled: false
 
+Style/Semicolon:
+  Enabled: false
+
+Style/PerlBackrefs:
+  Enabled: false
+
+Style/StructInheritance:
+  Enabled: false
+
 # stop nesting so hard
 Metrics/BlockNesting:
   Max: 2
@@ -63,7 +72,7 @@ Metrics/MethodLength:
   Max: 20
 
 Metrics/LineLength:
-  Max: 105
+  Max: 115
 
 # fewer parameters
 Metrics/ParameterLists:
