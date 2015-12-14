@@ -1,8 +1,6 @@
+require 'satisfy'
 require 'pp'
 require 'rspec'
-require 'satisfy/errors'
-require 'satisfy/builder'
-require 'satisfy/runner'
 
 module Satisfy
   module RSpec
@@ -14,13 +12,13 @@ module Satisfy
         # will be a Feature implementation, since a Feature is how
         # Gherkin represents a test spec.
         Satisfy::Builder.build(test_spec).specs.each do |feature|
-          # (puts 'SPEC:'; pp feature) if ENV['SATISFY_TRACE']
+          (puts 'SPEC:'; pp feature) if ENV['SATISFY_TRACE']
           ::RSpec.describe feature.name do
             feature.scenarios.each do |scenario|
-              # (puts 'SCENARIO:'; pp scenario) if ENV['SATISFY_TRACE']
+              (puts 'SCENARIO:'; pp scenario) if ENV['SATISFY_TRACE']
               describe scenario.name do
                 scenario.steps.each do |step|
-                  # (puts 'STEP:'; pp step) if ENV['SATISFY_TRACE']
+                  (puts 'STEP:'; pp step) if ENV['SATISFY_TRACE']
                   it step do
                     run(test_spec, step)
                   end
@@ -36,10 +34,23 @@ module Satisfy
       def load(*files, &block)
         puts "Loading: #{files}" if ENV['SATISFY_TRACE']
         if files.first.end_with?('.feature', '.spec', '.story')
+          load_helper 'satisfy_helper'
+          load_helper 'spec_helper'
+
           Satisfy::RSpec.build_and_run(files.first)
         else
           super
         end
+      end
+
+      private
+
+      def load_helper(file)
+        require file
+      rescue LoadError => e
+        # This makes sure that errors raised in the spec_helper file
+        # are not hidden by rescuing a load error.
+        raise unless e.message.include?(file)
       end
     end
 
@@ -62,4 +73,5 @@ end
 ::RSpec.configure do |config|
   config.pattern << ',**/*.feature,**/*.spec,**/*.story'
   config.include Satisfy::RSpec::SpecRunner
+  config.include Satisfy::Steps
 end

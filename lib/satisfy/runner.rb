@@ -5,6 +5,7 @@ module Satisfy
     def step(step)
       step_matches = methods.map do |method|
         next unless method.to_s.start_with?('matcher: ')
+        send(method.to_s, step)
       end.compact
 
       raise(Satisfy::Pending, step.name) if step_matches.length == 0
