@@ -22,6 +22,12 @@ module Satisfy
       private
 
       def execute_feature(describe_feature, feature, test_spec)
+        describe_feature.before do
+          feature.backgrounds.map(&:steps).flatten.each do |step|
+            run(test_spec, step)
+          end
+        end
+
         feature.scenarios.each do |scenario|
           (puts 'SCENARIO:'; pp scenario) if ENV['SATISFY_TRACE']
           instance_eval <<-CONTEXT, test_spec, scenario.line
