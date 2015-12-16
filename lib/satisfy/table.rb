@@ -2,16 +2,18 @@ module Satisfy
   class Table
     include Enumerable
 
+    attr_reader :repr
+
     def initialize(repr)
       @repr = repr
     end
 
     def headers
-      @repr.first
+      repr.first
     end
 
     def rows
-      @repr.drop(1)
+      repr.drop(1)
     end
 
     def hashes
@@ -19,7 +21,7 @@ module Satisfy
     end
 
     def each
-      @repr.each { |row| yield(row) }
+      repr.each { |row| yield(row) }
     end
   end
 end

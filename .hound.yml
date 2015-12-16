@@ -63,6 +63,12 @@ Style/PerlBackrefs:
 Style/StructInheritance:
   Enabled: false
 
+Style/OptionalArguments:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
 # stop nesting so hard
 Metrics/BlockNesting:
   Max: 2
@@ -89,3 +95,6 @@ Metrics/CyclomaticComplexity:
 
 Metrics/PerceivedComplexity:
   Max: 12
+
+Lint/UnusedMethodArgument:
+  Enabled: false

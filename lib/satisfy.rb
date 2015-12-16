@@ -5,6 +5,7 @@ require 'satisfy/runner'
 require 'satisfy/define'
 require 'satisfy/builder'
 require 'satisfy/matcher'
+require 'satisfy/placeholder'
 require 'satisfy/errors'
 
 module Satisfy

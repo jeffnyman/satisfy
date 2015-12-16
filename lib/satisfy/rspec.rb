@@ -12,20 +12,27 @@ module Satisfy
         # will be a Feature implementation, since a Feature is how
         # Gherkin represents a test spec.
         Satisfy::Builder.build(test_spec).specs.each do |feature|
-          (puts 'SPEC:'; pp feature) if ENV['SATISFY_TRACE']
-          ::RSpec.describe feature.name do
-            feature.scenarios.each do |scenario|
-              (puts 'SCENARIO:'; pp scenario) if ENV['SATISFY_TRACE']
-              describe scenario.name do
+          instance_eval <<-CONTEXT, test_spec, feature.line
+            describe_feature = ::RSpec.describe(feature.name)
+            execute_feature(describe_feature, feature, test_spec)
+          CONTEXT
+        end
+      end
+
+      private
+
+      def execute_feature(describe_feature, feature, test_spec)
+        feature.scenarios.each do |scenario|
+          (puts 'SCENARIO:'; pp scenario) if ENV['SATISFY_TRACE']
+          instance_eval <<-CONTEXT, test_spec, scenario.line
+            describe_feature.describe scenario.name do
+              it(scenario.steps.map(&:to_s).join(' -> ')) do
                 scenario.steps.each do |step|
-                  (puts 'STEP:'; pp step) if ENV['SATISFY_TRACE']
-                  it step do
-                    run(test_spec, step)
-                  end
+                  run(test_spec, step)
                 end
               end
             end
-          end
+          CONTEXT
         end
       end
     end
@@ -59,8 +66,10 @@ module Satisfy
 
       # @param test_spec [String] full path for test spec
       # @param step [Struct Satisfy::Builder::Step] the step to execute
-      def run(_test_spec, step)
-        step(step)
+      def run(test_spec, step)
+        instance_eval <<-CONTEXT, test_spec, step.line
+          step(step)
+        CONTEXT
       rescue Satisfy::Pending => e
         skip("No matcher for step: '#{e}'")
       end

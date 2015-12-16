@@ -1,4 +1,5 @@
-puts "SCENARIO STEPS LOADED"
+step 'looking up the definition of :term' do
+end
 
-step 'true is almost certainly not false' do
+step 'the result is :definition' do
 end

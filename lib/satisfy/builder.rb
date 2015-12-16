@@ -132,6 +132,9 @@ module Satisfy
     end
 
     class ScenarioOutline
+      include Name
+      include Tags
+
       attr_reader :steps
 
       def initialize(repr)
@@ -153,6 +156,8 @@ module Satisfy
                     swap(arg, headers, rows)
                   when Satisfy::Table
                     Satisfy::Table.new(arg.map { |arg_row| arg_row.map { |arg_col| swap(arg_col, headers, row) } })
+                  # else
+                  #  arg
                 end
               end
               Step.new(step.keyword, name, step.line, step_args)
