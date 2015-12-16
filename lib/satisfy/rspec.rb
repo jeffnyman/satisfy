@@ -13,7 +13,7 @@ module Satisfy
         # Gherkin represents a test spec.
         Satisfy::Builder.build(test_spec).specs.each do |feature|
           instance_eval <<-CONTEXT, test_spec, feature.line
-            describe_feature = ::RSpec.describe(feature.name)
+            describe_feature = ::RSpec.describe(feature.name, feature.metadata_hash)
             execute_feature(describe_feature, feature, test_spec)
           CONTEXT
         end
@@ -31,7 +31,7 @@ module Satisfy
         feature.scenarios.each do |scenario|
           (puts 'SCENARIO:'; pp scenario) if ENV['SATISFY_TRACE']
           instance_eval <<-CONTEXT, test_spec, scenario.line
-            describe_feature.describe scenario.name do
+            describe_feature.describe(scenario.name, scenario.metadata_hash) do
               it(scenario.steps.map(&:to_s).join(' -> ')) do
                 scenario.steps.each do |step|
                   run(test_spec, step)

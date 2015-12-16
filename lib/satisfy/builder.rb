@@ -83,6 +83,14 @@ module Satisfy
       def tags
         @repr.tags.map { |tag| tag.name.sub(/^@/, '') }
       end
+
+      def tags_hash
+        Hash[tags.map { |t| [t.to_sym, true] }]
+      end
+
+      def metadata_hash
+        tags_hash
+      end
     end
 
     class Feature
