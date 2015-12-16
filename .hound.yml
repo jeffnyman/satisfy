@@ -28,6 +28,9 @@ Style/SignalException:
 Style/TrailingComma:
   EnforcedStyleForMultiline: comma
 
+Style/RaiseArgs:
+  Enabled: false
+
 # this never works for validations
 Style/AlignHash:
   EnforcedLastArgumentHashStyle: ignore_implicit
