@@ -25,4 +25,30 @@ RSpec.describe Satisfy::Global do
       expect(Satisfy::Placeholder.send(:placeholders)).to have_key('example_2')
     end
   end
+
+  describe 'steps_for' do
+    before do
+      allow(::RSpec).to receive(:configure)
+    end
+
+    it 'creates a new module and adds steps to it' do
+      mod = context.steps_for(:testing) do
+        step('testing') { 'testing' }
+      end
+      an_object.extend mod
+      expect(an_object.step('testing')).to eq 'testing'
+    end
+
+    it 'remembers the name of the module' do
+      mod = context.steps_for(:testing) {}
+      expect(mod.tag).to eq :testing
+    end
+
+    it 'tells rspec to include the module' do
+      config = double
+      expect(RSpec).to receive(:configure).and_yield(config)
+      expect(config).to receive(:include)
+      context.steps_for(:foo) {}
+    end
+  end
 end

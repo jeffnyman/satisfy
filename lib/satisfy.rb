@@ -11,7 +11,13 @@ require 'satisfy/errors'
 module Satisfy
   module Steps
   end
+
+  class << self
+    attr_accessor :type
+  end
 end
+
+Satisfy.type = :feature
 
 Module.send(:include, Satisfy::Define)
 

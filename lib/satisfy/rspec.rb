@@ -77,7 +77,19 @@ module Satisfy
           step(step)
         CONTEXT
       rescue Satisfy::Pending => e
+        example = ::RSpec.current_example
+        example.metadata[:line_number] = step.line
+        example.metadata[:location] = "#{example.metadata[:file_path]}:#{step.line}"
+
+        if ::RSpec.configuration.raise_error_for_unimplemented_steps
+          e.backtrace.push "#{test_spec}:#{step.line}:in `#{step.description}'"
+          raise
+        end
+
         skip("No matcher for step: '#{e}'")
+      rescue StandardError, ::RSpec::Expectations::ExpectationNotMetError => e
+        e.backtrace.push "#{test_spec}:#{step.line}:in `#{step.description}'"
+        raise e
       end
     end
   end
@@ -87,6 +99,7 @@ end
 
 ::RSpec.configure do |config|
   config.pattern << ',**/*.feature,**/*.spec,**/*.story'
-  config.include Satisfy::RSpec::SpecRunner
-  config.include Satisfy::Steps
+  config.include Satisfy::RSpec::SpecRunner, satisfy: true
+  config.include Satisfy::Steps, satisfy: true
+  config.add_setting :raise_error_for_unimplemented_steps, default: false
 end

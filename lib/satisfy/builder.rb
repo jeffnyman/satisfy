@@ -100,11 +100,16 @@ module Satisfy
 
       attr_reader :scenarios
       attr_reader :backgrounds
+      attr_accessor :feature_tag
 
       def initialize(repr)
         @repr = repr
         @scenarios = []
         @backgrounds = []
+      end
+
+      def metadata_hash
+        super.merge(type: Satisfy.type, satisfy: true)
       end
     end
 
