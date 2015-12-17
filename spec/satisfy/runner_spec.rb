@@ -64,4 +64,10 @@ RSpec.describe Satisfy::StepRunner do
       obj.step('an ambiguous step')
     }.to raise_error(Satisfy::Ambiguous, %r{(ambiguous).*(runner_spec.rb)})
   end
+
+  it 'raises an argument error when both method name and block given' do
+    expect do
+      mod.step(:a_test_step, 'a :test step') { 'testing' }
+    end.to raise_error(ArgumentError)
+  end
 end
