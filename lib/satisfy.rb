@@ -1,6 +1,6 @@
 require 'satisfy/version'
 
-require 'satisfy/global'
+require 'satisfy/dsl'
 require 'satisfy/runner'
 require 'satisfy/define'
 require 'satisfy/builder'
@@ -21,4 +21,4 @@ Satisfy.type = :feature
 
 Module.send(:include, Satisfy::Define)
 
-extend Satisfy::Global
+extend Satisfy::DSL

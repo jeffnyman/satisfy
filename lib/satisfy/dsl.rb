@@ -1,5 +1,5 @@
 module Satisfy
-  module Global
+  module DSL
     def step(name, &block)
       Satisfy::Steps.step(name, &block)
     end

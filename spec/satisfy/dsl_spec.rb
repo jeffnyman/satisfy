@@ -1,5 +1,5 @@
-RSpec.describe Satisfy::Global do
-  let(:context) { double.tap { |s| s.extend(Satisfy::Global) }}
+RSpec.describe Satisfy::DSL do
+  let(:context) { double.tap { |s| s.extend(Satisfy::DSL) }}
   let(:an_object) { Object.new.tap { |o| o.extend(Satisfy::StepRunner) }}
 
   describe 'step' do
